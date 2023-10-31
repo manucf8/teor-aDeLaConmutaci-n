@@ -6,22 +6,29 @@ from .forms import TransportForm
 # Create your views here.
 def home(request):
 
-    # if this is a POST request we need to process the form data
     if request.method == "POST":
-        # create a form instance and populate it with data from the request:
         form = TransportForm(request.POST)
-        # check whether it's valid:
+
         if form.is_valid():
-            # process the data in form.cleaned_data as required
-            # ...
-            # redirect to a new URL:
+            
+            if request.POST['initial_position'] == request.POST['final_position']:
+                form = TransportForm()
+                return render(request, 'home.html', {'form': form, 'error':'Posición inicial y final deben ser distintas.'})
+
+            message = str(request.POST['initial_position'])[1]
+            message += str(request.POST['final_position'])[1]
+            if 'duration' in request.POST: message += request.POST['duration']
+
+            print(message)
+
+            # ser = serial.Serial('COM3', 9600, timeout=1)
+            # ser.write(message.encode())
+            
+            return render(request, 'home.html', {'form': form, 'congrat':'Su solicitud fue enviada. Revise la banda.'})
             return render(request, 'results.html')
 
-    # if a GET (or any other method) we'll create a blank form
     else:
         form = TransportForm()
 
     return render(request, 'home.html', {'form': form})
     
-    # ser = serial.Serial('COM3', 9600, timeout=1)
-    # ser.write(b"")

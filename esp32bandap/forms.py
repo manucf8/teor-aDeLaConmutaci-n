@@ -5,13 +5,13 @@ class TransportForm(forms.Form):
     initial_position = forms.ChoiceField(
         choices = [('S1', 'S1'), ('S2', 'S2'), ('S3', 'S3'), ('S4', 'S4')],
         widget = forms.Select(),
-        label = "Posición inicial"
+        label = "Posición A"
     )
 
     final_position = forms.ChoiceField(
         choices = [('S1', 'S1'), ('S2', 'S2'), ('S3', 'S3'), ('S4', 'S4')],
         widget = forms.Select(),
-        label = "Posición final"
+        label = "Posición B"
     )
 
     duration = forms.IntegerField(
