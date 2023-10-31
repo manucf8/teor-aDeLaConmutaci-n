@@ -60,7 +60,7 @@ void loop() {
 
 }
 
-void move(target) {
+void move(int target) {
 
   int current = 0;
   if (digitalRead(s1) == 1) current = 1;
