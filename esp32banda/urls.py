@@ -16,7 +16,9 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
+from esp32bandap import views as espViews
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('', espViews.home),
 ]
