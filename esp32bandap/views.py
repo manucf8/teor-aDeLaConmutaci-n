@@ -1,9 +1,12 @@
 from django.shortcuts import render
 import serial
-
+import time
 from .forms import TransportForm
 
-# Create your views here.
+
+# ser = serial.Serial('COM3', 9600, timeout=1)
+
+
 def home(request):
 
     if request.method == "POST":
@@ -21,7 +24,7 @@ def home(request):
 
             print(message)
 
-            # ser = serial.Serial('COM3', 9600, timeout=1)
+            time.sleep(2)
             # ser.write(message.encode())
             
             return render(request, 'home.html', {'form': form, 'congrat':'Su solicitud fue enviada. Revise la banda.'})
@@ -32,3 +35,5 @@ def home(request):
 
     return render(request, 'home.html', {'form': form})
     
+
+# ser.close()
