@@ -5,8 +5,7 @@ int s4 = 33;
 int der = 27;
 int izq = 26;
 
-int A, B, delayTime, option;
-
+int positions[4] = {34, 35, 32, 33};
 
 void move(int target);
 
@@ -25,37 +24,54 @@ void setup() {
 }
 
 void loop() {
-
   if (Serial.available() > 0) {
+
+    int option = Serial.parseInt();
+    Serial.print("Option: ");
+    Serial.println(option);
+    delay(2000);
+
+    if (option == 1) {
+
+      while (Serial.available() == 0) {}
+      int A = Serial.parseInt();
+      A = A/100;
+      Serial.print("Option A: ");
+      Serial.println(A);
+      // move(A);
+      Serial.println();
+
+      while (Serial.available() == 0) {}
+      int B = (Serial.parseInt()/10) % 10;
+      Serial.print("Option B: ");
+      Serial.println(B);
+      // move(B);
+      Serial.println();
     
-    option = Serial.read();
-
-    if (option > 119) {
-
-      A = option/100;
-      move(A);
       delay(2000);
-
-      B = (option/10) % 10;
-      move(B);
-      
-      delayTime = option % 10;
-      delay(delayTime);
-      move(A);
+      while (Serial.available() == 0) {}
+      int delayTime = Serial.parseInt() % 10;
+      delay(delayTime*1000);
+      Serial.print("Return A: ");
+      Serial.println(A);
+      // move(A);
+      Serial.println();
 
     }
 
     else {
 
-      A = option/10;
+      while (Serial.available() == 0) {}
+      int A = Serial.parseInt()/10;
       move(A);
       delay(2000);
-      B = option % 10;
+
+      while (Serial.available() == 0) {}
+      int B = Serial.parseInt() % 10;
       move(B);
 
     }
 
-    
   }
 
 }
@@ -63,17 +79,38 @@ void loop() {
 void move(int target) {
 
   int current = 0;
-  if (digitalRead(s1) == 1) current = 1;
-  if (digitalRead(s2) == 1) current = 2;
-  if (digitalRead(s3) == 1) current = 3;
-  if (digitalRead(s4) == 1) current = 4;
 
-  if (current != target) {
+  if (digitalRead(s1) == 1) {
+    current = 1;
+  }
+  else if (digitalRead(s2) == 1) {
+    current = 2;
+  }
+  else if (digitalRead(s3) == 1) {
+    current = 3;
+  }
+  else if (digitalRead(s4) == 1) {
+    current = 4;
+  }
+  
+
+  int final_position = positions[target-1];
+
+  Serial.print("Current: ");
+  Serial.println(current);
+
+  if (current != target && current != 0) {
     if (current > target) {
-      while (digitalRead(target) != 1) digitalWrite(der, 1);
+      while (digitalRead(final_position) == 0) {
+        digitalWrite(der, 1);
+      }
+      digitalWrite(der, 0);
     }
     else {
-      while (digitalRead(target) != 1) digitalWrite(izq, 1);
+      while (digitalRead(final_position) == 0) { 
+        digitalWrite(izq, 1);
+      }
+      digitalWrite(izq, 0);
     }
   }
 

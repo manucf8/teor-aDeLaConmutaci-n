@@ -3,10 +3,6 @@ import serial
 import time
 from .forms import TransportForm
 
-
-# ser = serial.Serial('COM3', 9600, timeout=1)
-
-
 def home(request):
 
     if request.method == "POST":
@@ -17,23 +13,51 @@ def home(request):
             if request.POST['initial_position'] == request.POST['final_position']:
                 form = TransportForm()
                 return render(request, 'home.html', {'form': form, 'error':'Posición inicial y final deben ser distintas.'})
+    
+            try:
+                ser = serial.Serial('COM3', 115200)
+                time.sleep(2)
+                print("Conectado")
 
-            message = str(request.POST['initial_position'])[1]
-            message += str(request.POST['final_position'])[1]
-            if 'duration' in request.POST: message += request.POST['duration']
-
-            print(message)
-
-            time.sleep(2)
-            # ser.write(message.encode())
+            except serial.SerialException as e:
+                print(f"Error al abrir el puerto COM: {e}")
+                return render(request, 'home.html', {'form': form, 'error':'No fue posible conectarse con el puerto.'})
             
+            if 'initial_position' in request.POST and 'final_position' in request.POST and 'duration' in request.POST:
+                ser.write(b'1')
+            else:
+                ser.write(b'0')
+            
+            A = str(request.POST['initial_position'])[1]
+            if A == '1': ser.write(b'1')
+            elif A == '2': ser.write(b'2')
+            elif A == '3': ser.write(b'3')
+            elif A == '4': ser.write(b'4')
+            
+            B = str(request.POST['final_position'])[1]
+            if B == '1': ser.write(b'1')
+            elif B == '2': ser.write(b'2')
+            elif B == '3': ser.write(b'3')
+            elif B == '4': ser.write(b'4')
+
+            if 'duration' in request.POST:
+                delayTime = request.POST['final_position']
+                if delayTime == '0': ser.write(b'0')
+                elif delayTime == '1': ser.write(b'1')
+                elif delayTime == '2': ser.write(b'2')
+                elif delayTime == '3': ser.write(b'3')
+                elif delayTime == '4': ser.write(b'4')
+                elif delayTime == '5': ser.write(b'5')
+                elif delayTime == '6': ser.write(b'6')
+                elif delayTime == '7': ser.write(b'7')
+                elif delayTime == '8': ser.write(b'8')
+                elif delayTime == '9': ser.write(b'9')
+
+            if 'ser' in locals() and ser.is_open: ser.close()
+
             return render(request, 'home.html', {'form': form, 'congrat':'Su solicitud fue enviada. Revise la banda.'})
-            return render(request, 'results.html')
 
     else:
         form = TransportForm()
 
     return render(request, 'home.html', {'form': form})
-    
-
-# ser.close()
