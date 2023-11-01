@@ -2,12 +2,15 @@ from django.shortcuts import render
 import serial
 import time
 from .forms import TransportForm
+from .prueba import call
 
-def write_read(x, ser): 
-    ser.write(bytes(x, 'utf-8')) 
+def write_read(x): 
+    arduino = serial.Serial(port='COM3', baudrate=115200, timeout=.1) 
+    arduino.write(bytes(x, 'utf-8')) 
     time.sleep(0.05) 
-    data = ser.readline() 
-    return data 
+    data1 = arduino.readline() 
+
+    return data1
 
 def home(request):
 
@@ -19,17 +22,8 @@ def home(request):
             
             if request.POST['initial_position'] == request.POST['final_position']:
                 form = TransportForm()
-                return render(request, 'home.html', {'form': form, 'error':'Posición inicial y final deben ser distintas.'})
+                return render(request, 'home.html', {'form': form, 'error':'Posición inicial y final deben arduino distintas.'})
     
-            try:
-                ser = serial.Serial('COM3', 115200, timeout=.1)
-                time.sleep(2)
-                print("Conectado")
-
-            except serial.SerialException as e:
-                print(f"Error al abrir el puerto COM: {e}")
-                return render(request, 'home.html', {'form': form, 'error':'No fue posible conectarse con el puerto.'})
-                       
 
             message = str(request.POST['initial_position'])[1]
             message += str(request.POST['final_position'])[1]
@@ -38,12 +32,15 @@ def home(request):
                 message = "1" +message
             else:
                 message = "0" +message
-                 
             
-            value = write_read(message, ser).decode('utf-8')
-            print(value)
+            try:
+                call(message)
+    
+            except serial.SerialException as e:
+                print(f"Error al abrir el puerto COM: {e}")
+                return render(request, 'home.html', {'form': form, 'error':'No fue posible conectarse con el puerto.'})
+                       
 
-            if 'ser' in locals() and ser.is_open: ser.close()
 
             return render(request, 'home.html', {'form': form, 'congrat':'Su solicitud fue enviada. Revise la banda.'})
 
