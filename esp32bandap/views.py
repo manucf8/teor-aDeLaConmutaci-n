@@ -15,7 +15,7 @@ def home(request):
             
             if request.POST['initial_position'] == request.POST['final_position']:
                 form = TransportForm()
-                return render(request, 'home.html', {'form': form, 'error':'Posición inicial y final deben ser distintas.'})
+                return JsonResponse({'status': 'Error', 'message': 'Posición inicial y final deben ser distintas.'})
     
             message = str(request.POST['initial_position'])[1]
             message += str(request.POST['final_position'])[1]
