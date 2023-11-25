@@ -1,7 +1,8 @@
 from django.shortcuts import render
 import serial
 from .forms import TransportForm
-from .prueba import call, write_read
+from .prueba import call
+from django.http import JsonResponse
 
 def home(request):
 
@@ -30,14 +31,16 @@ def home(request):
                 var = call(message)
                 print('después del try')
                 print(var)
+                
+                if var== "1":
+                    return JsonResponse({'status': 'Success'})
             
     
             except serial.SerialException as e:
                 print(f"Error al abrir el puerto COM: {e}")
-                return render(request, 'home.html', {'form': form, 'error':'No fue posible conectarse con el puerto.'})
+                return JsonResponse({'status': 'Error', 'message': 'No fue posible conectarse con el puerto.'})
 
-            return render(request, 'home.html', {'form': form, 'congrat':'Su solicitud fue enviada. Revise la banda.'})
-
+           
     else:
         form = TransportForm()
 
