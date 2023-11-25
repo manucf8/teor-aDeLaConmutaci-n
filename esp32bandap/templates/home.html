@@ -73,6 +73,7 @@ $(document).ready(function() {
 
                 console.log("AJAX Success");
                 console.log(response);
+                console.log("Content-Type:", xhr.getResponseHeader("Content-Type"));
                 
                 if (response.status === "Success") {
                     $("#success-message").text("Su paquete ha llegado a su destino.");
@@ -83,9 +84,7 @@ $(document).ready(function() {
             error: function(error) {
                 console.log(error);
             }
-            error: function(xhr, status, error) {
-                console.error("AJAX Error: " + status + ' - ' + error);
-            }
+            
         });
     });
 });

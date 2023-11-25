@@ -33,7 +33,8 @@ def home(request):
                 print(var)
                 
                 if var== "1":
-                    return JsonResponse({'status': 'Success'})
+                    print("JSON Response:", JsonResponse({'status': 'Success'}).content)
+                    return JsonResponse({'status': 'Success'}, content_type='application/json')
             
     
             except serial.SerialException as e:
