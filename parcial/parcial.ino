@@ -1,20 +1,27 @@
+#include "WiFi.h"
+
+const char* ssid = "manu_miamor";
+const char* password = "manu1234";
+WiFiServer server(80);
 int s1 = 34;
 int s2 = 35;
 int s3 = 32;
 int s4 = 33;
 int der = 26;
 int izq = 27;
-
 int A, B, delayTime;
-
-#define STATUS_LED_PIN 2
-
 int positions[4] = {34, 35, 32, 33};
-
 void move(int target);
 
 
 void setup() {
+      
+  Serial.begin(115200);
+
+  WiFi.softAP(ssid, password);
+  // Serial.println("Punto de acceso iniciado");
+  // Serial.print("Dirección IP: ");
+  // Serial.println(WiFi.softAPIP());
 
   pinMode(s4, INPUT);
   pinMode(s3, INPUT);
@@ -22,73 +29,66 @@ void setup() {
   pinMode(s1, INPUT);
   pinMode(der, OUTPUT);
   pinMode(izq, OUTPUT);
-  pinMode(STATUS_LED_PIN, OUTPUT); 
 
-  Serial.begin(115200);
-	Serial.setTimeout(1); 
+  server.begin();
 
 }
 
 void loop() {
 
-  while (!Serial.available());
-  String text = Serial.readString();
-  digitalWrite(STATUS_LED_PIN, HIGH);
+  WiFiClient client = server.available();
 
-  // Espera un tiempo (por ejemplo, 1 segundo)
-  delay(1000);
+  if (client) {
 
-  // Apaga el LED de estado
-  digitalWrite(STATUS_LED_PIN, LOW);
+    Serial.println("Cliente conectado");
+    String IP = client.remoteIP().toString();
+    Serial.print("IP del cliente: ");
+    Serial.println(IP);
 
-  // Espera otro tiempo
-  delay(1000);
+    while (client.connected()) {
 
-  if (text == "1121") {
-      // Enciende el LED de estado
-  digitalWrite(STATUS_LED_PIN, HIGH);
+      while (!Serial.available());
+      String text = Serial.readString();
 
-  // Espera un tiempo (por ejemplo, 1 segundo)
-  delay(1000);
+      if (text[0] == '1') {
 
-  // Apaga el LED de estado
-  digitalWrite(STATUS_LED_PIN, LOW);
+        Serial.println("Inside option 1");
 
-  // Espera otro tiempo
-  delay(1000);
+       /*  Serial.print("A: ");
+        Serial.println(text[1]); */
 
-  }
-  Serial.println(text);
+        A = String(text[1]).toInt();
+        move(A);
 
-  if (text[0] == '1') {
+        /* Serial.print("B: ");
+        Serial.println(text[2]) */;
+        int B = String(text[2]).toInt();
+        move(B);
+      
+        // Serial.print("Delay: ");
+        // Serial.println(text[3]);
+        int delayTime = String(text[3]).toInt();
+        delay(delayTime*1000);
+        move(A);
 
-    Serial.println("Inside option 1");
+      } else if (text[0] == '0') {
 
-    Serial.print("A: ");
-    Serial.println(text[1]);
+        A = String(text[1]).toInt();
+        move(A);
 
-    A = String(text[1]).toInt();
-    move(A);
+        int B = String(text[2]).toInt();
+        move(B);
+        
+      }
 
-    Serial.print("B: ");
-    Serial.println(text[2]);
-    int B = String(text[2]).toInt();
-    move(B);
-  
-    Serial.print("Delay: ");
-    Serial.println(text[3]);
-    int delayTime = String(text[3]).toInt();
-    delay(delayTime*1000);
-    move(A);
+      client.println(1);
+      delay(1000);
 
-  } else if (text[0] == '0') {
+    }
 
-    A = String(text[1]).toInt();
-    move(A);
+    client.stop();
+    Serial.println("Cliente desconectado");
 
-    int B = String(text[2]).toInt();
-    move(B);
-    
   }
 
 }
@@ -110,11 +110,11 @@ void move(int target) {
     current = 4;
   }
 
-  Serial.print("Current: ");
-  Serial.println(current);
+  // Serial.print("Current: ");
+  // Serial.println(current);
   
-  Serial.print("Target: ");
-  Serial.println(target);
+  // Serial.print("Target: ");
+  // Serial.println(target);
 
 
   int final_position = positions[target-1];
@@ -123,14 +123,12 @@ void move(int target) {
     if (current > target) {
       
       while (digitalRead(final_position) == 0) {
-        Serial.println(digitalRead(final_position));
         digitalWrite(der, 1);
       }
       digitalWrite(der, 0);
     }
     else {
-      while (digitalRead(final_position) == 0) { 
-        Serial.println(digitalRead(final_position));
+      while (digitalRead(final_position) == 0) {
         digitalWrite(izq, 1);
       }
       digitalWrite(izq, 0);
@@ -165,7 +163,6 @@ void move(int target) {
 //   Serial.println(text);
 
 //   if (text[0] == '1') {
-//     Serial.println(text);
 //     int inicial = millis();
 //     int actual = millis();
 //     while ((actual - inicial) < 2000) {
