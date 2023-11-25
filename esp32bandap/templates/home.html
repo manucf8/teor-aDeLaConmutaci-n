@@ -59,20 +59,19 @@
         }
     </script>
 
-    <!-- Add this to include jQuery in your home.html file -->
 <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 
-<!-- Add this script to handle AJAX and update messages -->
+
 <script>
 $(document).ready(function() {
     $("#submit-button").click(function(e) {
         e.preventDefault();
 
-        // Make an AJAX request to your Django view
+        
         $.ajax({
             type: "POST",
-            url: "{% url 'home' %}",  // Replace 'home' with the name assigned to your URL pattern
-            data: $("#form-id").serialize(),  // Replace 'your-form-id' with the actual ID of your form
+            url: "{% url 'home' %}",  
+            data: $("#form-id").serialize(),  
             success: function(response, status, xhr) {
 
                 console.log("AJAX Success");
@@ -86,7 +85,7 @@ $(document).ready(function() {
                     $("#success-image").attr("src", "https://img.freepik.com/free-vector/realistic-paper-box-isolated_1308-116513.jpg?size=626&ext=jpg&ga=GA1.1.1826414947.1699574400&semt=ais");  // Replace "URL_OF_YOUR_IMAGE" with the actual URL
                     $("#success-image").show();
                 } else {
-                    // Handle other cases if needed
+                    
                 }
             },
             error: function(error) {
