@@ -69,11 +69,12 @@ $(document).ready(function() {
             type: "POST",
             url: "{% url 'home' %}",  // Replace 'home' with the name assigned to your URL pattern
             data: $("#form-id").serialize(),  // Replace 'your-form-id' with the actual ID of your form
-            success: function(response) {
+            success: function(response, status, xhr) {
 
                 console.log("AJAX Success");
                 console.log(response);
                 console.log("Content-Type:", xhr.getResponseHeader("Content-Type"));
+                var jsonResponse = JSON.parse(response);
                 
                 if (response.status === "Success") {
                     $("#success-message").text("Su paquete ha llegado a su destino.");
