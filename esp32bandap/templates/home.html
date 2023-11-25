@@ -5,6 +5,105 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
     <title>Opciones de Transporte</title>
+
+    <style>
+        /* Animation CSS */
+        @keyframes push {
+            0% {
+                transform: translate(0, -1em) rotate(-45deg);
+            }
+            5% {
+                transform: translate(0, -1em) rotate(-50deg);
+            }
+            20% {
+                transform: translate(1em, -2em) rotate(47deg);
+            }
+            25% {
+                transform: translate(1em, -2em) rotate(45deg);
+            }
+            30% {
+                transform: translate(1em, -2em) rotate(40deg);
+            }
+            45% {
+                transform: translate(2em, -3em) rotate(137deg);
+            }
+            50% {
+                transform: translate(2em, -3em) rotate(135deg);
+            }
+            55% {
+                transform: translate(2em, -3em) rotate(130deg);
+            }
+            70% {
+                transform: translate(3em, -4em) rotate(217deg);
+            }
+            75% {
+                transform: translate(3em, -4em) rotate(220deg);
+            }
+            100% {
+                transform: translate(3em, -4em) rotate(220deg);
+            }
+        }
+
+        @keyframes glow {
+            0% {
+                box-shadow: 0 0 5px 5px #FFD700;
+            }
+            100% {
+                box-shadow: 0 0 20px 10px #FFD700;
+            }
+        }
+
+        /* Styles for Loader, Hill, and Animation Box */
+        html, body {
+            background-color: #404456;
+            height: 100%;
+            margin: 0;
+        }
+
+        #loader {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            margin-top: -2.7em;
+            margin-left: -2.7em;
+            width: 5.4em;
+            height: 5.4em;
+            background-color: #404456;
+        }
+
+        #hill {
+            position: absolute;
+            width: 7.1em;
+            height: 7.1em;
+            top: 1.7em;
+            left: 1.7em;
+            background-color: transparent;
+            border-left: .25em solid whitesmoke;
+            transform: rotate(45deg);
+        }
+
+        #hill:after {
+            content: '';
+            position: absolute;
+            width: 7.1em;
+            height: 7.1em;
+            left: 0;
+            background-color: #404456;
+        }
+
+        .animation-box {
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            width: 1em;
+            height: 1em;
+            background-color: transparent;
+            border: .25em solid whitesmoke;
+            border-radius: 15%;
+            animation: push 2.5s cubic-bezier(.79, 0, .47, .97) forwards, glow 0.5s 3s forwards;
+        }
+    </style>
 </head>
 <body class="container mt-4">
     <h1 class="mb-4">Opciones de Transporte</h1>
@@ -15,7 +114,9 @@
         </div>
     {% endif %}  {% endcomment %}              
     
-    <div id="success-message">Su solicitud fue enviada. Revise la banda.</div>             
+    <div class="alert alert-info mt-4" role="alert" id="success-message">
+        Ingrese aquí los datos de su envío.
+    </div>
     
     <form method="post"  id="form-id">
         {% csrf_token %}
@@ -74,10 +175,15 @@ $(document).ready(function() {
                 console.log("AJAX Success");
                 console.log(response);
                 console.log("Content-Type:", xhr.getResponseHeader("Content-Type"));
-                var jsonResponse = JSON.parse(response);
+                
                 
                 if (response.status === "Success") {
                     $("#success-message").text("Su paquete ha llegado a su destino.");
+                    
+                    $("body").append('<div id="loader"><div id="hill"></div></div>');
+
+                            // Add the animation box to the body
+                            $("body").append('<div class="animation-box"></div>');
                 } else {
                     // Handle other cases if needed
                 }
