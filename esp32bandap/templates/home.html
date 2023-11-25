@@ -83,6 +83,9 @@ $(document).ready(function() {
             error: function(error) {
                 console.log(error);
             }
+            error: function(xhr, status, error) {
+                console.error("AJAX Error: " + status + ' - ' + error);
+            }
         });
     });
 });
