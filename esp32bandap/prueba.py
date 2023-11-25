@@ -23,4 +23,4 @@ def write_read(x):
 def call(msg):
     num = str(msg).strip()
     value = write_read(num).decode('utf-8')
-    print(value)
+    return value

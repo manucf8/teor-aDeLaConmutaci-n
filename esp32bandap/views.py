@@ -1,7 +1,7 @@
 from django.shortcuts import render
 import serial
 from .forms import TransportForm
-from .prueba import call
+from .prueba import call, write_read
 
 def home(request):
 
@@ -27,8 +27,9 @@ def home(request):
 
             try:
                 print('antes del try')
-                call(message)
+                var = call(message)
                 print('después del try')
+                print(var)
             
     
             except serial.SerialException as e:

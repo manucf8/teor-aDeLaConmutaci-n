@@ -40,10 +40,10 @@ void loop() {
 
   if (client) {
 
-    Serial.println("Cliente conectado");
+    /* Serial.println("Cliente conectado"); */
     String IP = client.remoteIP().toString();
-    Serial.print("IP del cliente: ");
-    Serial.println(IP);
+    /* Serial.print("IP del cliente: ");
+    Serial.println(IP); */
 
     while (client.connected()) {
 
@@ -52,7 +52,7 @@ void loop() {
 
       if (text[0] == '1') {
 
-        Serial.println("Inside option 1");
+        /* Serial.println("Inside option 1"); */
 
        /*  Serial.print("A: ");
         Serial.println(text[1]); */
@@ -82,12 +82,13 @@ void loop() {
       }
 
       client.println(1);
+      Serial.println("1");
       delay(1000);
 
     }
 
     client.stop();
-    Serial.println("Cliente desconectado");
+    /* Serial.println("Cliente desconectado"); */
 
   }
 
