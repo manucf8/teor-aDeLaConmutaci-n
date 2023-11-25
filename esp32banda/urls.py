@@ -20,5 +20,5 @@ from esp32bandap import views as espViews
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', espViews.home),
+    path('', espViews.home, name='home'),
 ]

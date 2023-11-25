@@ -67,7 +67,7 @@ $(document).ready(function() {
         // Make an AJAX request to your Django view
         $.ajax({
             type: "POST",
-            url: "{% url '/' %}",  // Replace 'home' with the name assigned to your URL pattern
+            url: "{% url 'home' %}",  // Replace 'home' with the name assigned to your URL pattern
             data: $("#form-id").serialize(),  // Replace 'your-form-id' with the actual ID of your form
             success: function(response) {
                 // Update the success message based on the response
