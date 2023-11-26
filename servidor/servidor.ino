@@ -19,9 +19,7 @@ void setup() {
   Serial.begin(115200);
 
   WiFi.softAP(ssid, password);
-  // Serial.println("Punto de acceso iniciado");
-  // Serial.print("Dirección IP: ");
-  // Serial.println(WiFi.softAPIP());
+  
 
   pinMode(s4, INPUT);
   pinMode(s3, INPUT);
@@ -40,10 +38,9 @@ void loop() {
 
   if (client) {
 
-    /* Serial.println("Cliente conectado"); */
+    
     String IP = client.remoteIP().toString();
-    /* Serial.print("IP del cliente: ");
-    Serial.println(IP); */
+    
 
     while (client.connected()) {
 
@@ -52,21 +49,15 @@ void loop() {
 
       if (text[0] == '1') {
 
-        /* Serial.println("Inside option 1"); */
-
-       /*  Serial.print("A: ");
-        Serial.println(text[1]); */
-
+        
         A = String(text[1]).toInt();
         move(A);
 
-        /* Serial.print("B: ");
-        Serial.println(text[2]) */;
+        
         int B = String(text[2]).toInt();
         move(B);
       
-        // Serial.print("Delay: ");
-        // Serial.println(text[3]);
+        
         int delayTime = String(text[3]).toInt();
         delay(delayTime*1000);
         move(A);
@@ -88,8 +79,7 @@ void loop() {
     }
 
     client.stop();
-    /* Serial.println("Cliente desconectado"); */
-
+    
   }
 
 }
@@ -110,12 +100,6 @@ void move(int target) {
   else if (digitalRead(s4) == 1) {
     current = 4;
   }
-
-  // Serial.print("Current: ");
-  // Serial.println(current);
-  
-  // Serial.print("Target: ");
-  // Serial.println(target);
 
 
   int final_position = positions[target-1];
