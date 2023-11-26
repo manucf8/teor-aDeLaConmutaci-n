@@ -4,13 +4,16 @@ int red = 27;
 int green = 26;
 int sound_power = 32;
 
+//Definir credenciales para conexión wifi
 const char* ssid = "manu_miamor";
 const char* password = "manu1234";
 
 void setup() {
 
+  //Iniciar comunicación
   Serial.begin(115200);
-
+  
+  // Usar credenciales para conexión wifi
   WiFi.begin(ssid, password);
   while (WiFi.status() != WL_CONNECTED) {
     delay(1000);
@@ -37,17 +40,22 @@ void loop() {
 
   while (client.connected()) {
 
-    Serial.println("entró");
+    
+
+    //Leer hasta que reciba información que le indique que ya finalizó el recorrido
     String line = client.readStringUntil('\n');
 
+    //Encender led rojo mientras se recibe solicitud y/o se completa el recorrido
     digitalWrite(red, 1);
-    
+
+
+    //Mientras el recorrido no haya finalizado, seguir leyendo y no hacer nada más
     while (line.length() == 0) {
       line = client.readStringUntil('\n');
       
     }
 
-    Serial.println("fuera del while, ya recibió instrucción");
+    //Apagar led rojo y titilar led verde y bocina 3 veces
     digitalWrite(red, 0);
 
     digitalWrite(green, 1);
@@ -74,6 +82,6 @@ void loop() {
     digitalWrite(green, 0);
 
   }
-  Serial.println("salió");
+  
   client.stop();
 }
